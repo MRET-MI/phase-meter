@@ -1,0 +1,132 @@
+# CubeMX 設定ガイド — phse-meter-firm_v0 (NUCLEO-H753ZI)
+
+CubeMX で生成したベースプロジェクトに対し、本ファームを動かすために必要な設定。
+✅=設定済み / ⚠️=要設定（このままでは動作しない）。設定後、Project → Generate Code。
+
+---
+
+## 0. ボード前提（NUCLEO-H753ZI / STM32H753ZIT6）
+
+- USB は **OTG_FS + CDC**（User USB CN13, PA11/PA12）。送信=`CDC_Transmit_FS`, 受信=`CDC_Receive_FS`, ハンドル=`hUsbDeviceFS`。
+- ST-LINK 仮想COM = USART3(PD8/PD9)。本通信は USB CDC を使用。
+- D-Cache 無効（DMA キャッシュメンテ不要）。
+
+---
+
+## 1. クロック ✅（設定済み・確認のみ）
+
+| 項目 | 値 |
+|---|---|
+| PLL ソース | HSE 8 MHz |
+| SYSCLK / CPU | 480 MHz |
+| HCLK(AHB) / APB タイマクロック | **240 MHz** |
+| 電源スケール | **VOS0** |
+| ADC カーネルクロック | **≒50.5 MHz**（PLL2P, prescaler DIV1） |
+| USB クロック | HSI48 |
+
+> TIM1 で 240 MHz ÷ 240 = **1.000 MHz** トリガ。ADC 50.5 MHz, 16bit 変換 17cyc ≒ 337 ns < 1 µs。
+
+---
+
+## 2. ADC1 / ADC2 ⚠️
+
+| 設定 | 値 | 状態 |
+|---|---|---|
+| Mode (multimode) | Dual regular simultaneous | ✅ |
+| ADC1 ch | INP14 (PA2), Rank1 | ✅ |
+| ADC2 ch | INP15 (PA3), Rank1 | ✅ |
+| **Resolution** | **16 bits**（推奨。12bit も可） | ⚠️ 現状 12bit |
+| **Sampling Time** | **8.5 Cycles**（ADC1・ADC2 両方） | ⚠️ 現状 1.5 |
+| Clock Prescaler | Asynchronous **DIV1**（ADC1/ADC2 一致） | ⚠️ ADC1 要確認 |
+| External Trigger Conv | **TIM1_CC1** | ✅ |
+| External Trigger Edge | **Rising** | ⚠️ 明示する |
+| Continuous Conv Mode | Disabled | （1トリガ1変換） |
+| **DMA Continuous Requests** | **Enabled** | ⚠️ 必須（Disable だと1サンプルで停止） |
+| Overrun behaviour | Overrun data overwritten | 既定可 |
+
+---
+
+## 3. DMA（ADC1）⚠️
+
+| 設定 | 値 | 状態 |
+|---|---|---|
+| Stream | DMA1_Stream0 | ✅ |
+| Direction | Periph → Memory | ✅ |
+| Peripheral/Memory data width | **Word / Word** (32-bit) | ✅ |
+| Memory increment | Enable | ✅ |
+| **Mode** | **Normal**（ワンショット） | ⚠️ 現状 Circular |
+| Priority | High 以上推奨 | — |
+| NVIC DMA1_Stream0 割込 | Enable | ✅ |
+
+> Normal 推奨理由: 10 ms 毎に 4096 点を1回取得 → 完了後に FFT。Circular だと FFT 中に
+> バッファが上書きされ波形が壊れる。ワンショットなら取得完了後のバッファは静止していて安全。
+
+---
+
+## 4. TIM1（ADC トリガ, 1 MHz）⚠️
+
+| 設定 | 値 |
+|---|---|
+| Clock Source | **Internal Clock**（ITR1/スレーブは無効化） |
+| Channel1 | PWM Generation CH1（CC1 が ADC トリガ源） |
+| Prescaler (PSC) | **0** |
+| Counter Period (ARR) | **239**（240 MHz / 240 = 1 MHz） |
+| Pulse (CCR1) | 120 程度（デューティ任意, CC1 イベント生成が目的） |
+| 出力ピン PE9 | 任意（内部 CC1 トリガのみで可。波形確認に便利） |
+
+> 現状 `VP_TIM1_VS_ClockSourceINT`(Internal) と `VP_TIM1_VS_ClockSourceITR`(ITR1) が
+> 両方有効で矛盾。**Internal Clock のみ**にすること。
+
+---
+
+## 5. TIM6（100 Hz ティック）⚠️ 未追加
+
+| 設定 | 値 |
+|---|---|
+| 有効化 | Activated（Internal Clock） |
+| Prescaler (PSC) | **2399** |
+| Counter Period (ARR) | **999** |
+| 周期 | 240 MHz / 2400 / 1000 = **100 Hz (10 ms)** |
+| NVIC TIM6 global interrupt | **Enable** |
+
+---
+
+## 6. USB ✅
+
+- USB_OTG_FS = Device_Only、Class = CDC、HSI48。確認のみ。
+
+---
+
+## 7. SPI（HMC8073 アッテネータ）— 設定済み ✅
+
+HMC8073LP3DE ×2（TX/RX）を別バスで制御。共通設定: **Transmit Only Master,
+8bit, LSB First, CPOL Low, CPHA 1Edge, NSS Software**, BaudRate prescaler 8。
+
+| 用途 | SPI | SCK | MOSI | LE(GPIO out, 初期Low) |
+|---|---|---|---|---|
+| TX (`g_hmc8073_transmitter`) | SPI2 | PB13 | PB15 | **PB4** |
+| RX (`g_hmc8073_receiver`) | SPI3 | PC10 | PC12 | **PC15** |
+
+- MISO は HMC8073 が書き込み専用のため不要（PB14 等は未使用で可）。
+- **PC15 は元 RCC_OSC32_OUT(LSE)**。GPIO 化のため RCC の LSE を Disable 済み。
+- ドライバ `Core/{Inc,Src}/hmc8073_driver.{h,c}`、実体化・駆動は `functions.c`
+  （`HMC8073_ENABLED=1`）。**要確認**: TX/RX とバスの対応、各デバイスの
+  アドレス strap A2:A1:A0（現状コードは両方 0 を仮定）。
+
+---
+
+## 8. 生成後に追記するユーザコード（USER CODE ブロック）
+
+| ファイル | 追記内容 |
+|---|---|
+| `Core/Src/main.c` | `StartUp()`（BEGIN 2）、`Main_Processing()`（BEGIN 3 / while ループ） |
+| `Core/Src/functions.c` (新規) | 状態機械・ADC 取得・位相差・コマンド処理 |
+| `Core/Inc/functions.h`, `macros.h` (新規) | 型・定数・プロトタイプ |
+| `Core/Src/DWT.c`, `Core/Inc/DWT.h` (新規) | サイクルカウンタ計測 |
+| `Core/Src/stm32h7xx_it.c` | HAL コールバックは functions.c 側で weak override するため原則変更不要 |
+| `USB_DEVICE/App/usbd_cdc_if.c` | RX リングバッファ + `CDC_RxReadByte` / `CDC_SendString`（FS 版） |
+
+> コールバック対応:
+> - `HAL_TIM_PeriodElapsedCallback`（htim6）→ `OnTick100Hz()`
+> - `HAL_ADC_ConvCpltCallback`（hadc1）→ `OnAdcConvCplt()`
+> これらは functions.c で HAL の weak 関数を override して実装する。
