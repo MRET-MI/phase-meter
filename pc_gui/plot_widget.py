@@ -1,4 +1,4 @@
-"""Rolling phase-difference plot (pyqtgraph)."""
+"""Rolling time-series plot (pyqtgraph), used for phase and amplitude."""
 
 from __future__ import annotations
 
@@ -10,14 +10,18 @@ import pyqtgraph as pg
 from PySide6.QtCore import QTimer
 
 
-class PhasePlot(pg.PlotWidget):
-    """Live scrolling plot of phase difference [deg] vs. time [s].
+class RollingPlot(pg.PlotWidget):
+    """Live scrolling plot of a value vs. time [s].
 
     Samples are pushed via add(); the curve is redrawn on a fixed timer
     (decoupled from the ~100 Hz arrival rate to keep the UI smooth).
+
+    yrange=None enables auto-ranging on the Y axis.
     """
 
-    def __init__(self, window_s: float = 30.0, redraw_hz: float = 30.0, parent=None):
+    def __init__(self, ylabel="Phase difference", yunits="deg",
+                 yrange=(-180, 180), color="#1565c0",
+                 window_s: float = 30.0, redraw_hz: float = 30.0, parent=None):
         super().__init__(parent)
         self._window_s = window_s
         self._t0 = time.monotonic()
@@ -27,10 +31,13 @@ class PhasePlot(pg.PlotWidget):
 
         self.setBackground("w")
         self.showGrid(x=True, y=True, alpha=0.3)
-        self.setLabel("left", "Phase difference", units="deg")
+        self.setLabel("left", ylabel, units=yunits)
         self.setLabel("bottom", "Time", units="s")
-        self.setYRange(-180, 180)
-        self._curve = self.plot(pen=pg.mkPen("#1565c0", width=2))
+        if yrange is not None:
+            self.setYRange(*yrange)
+        else:
+            self.enableAutoRange(axis="y")
+        self._curve = self.plot(pen=pg.mkPen(color, width=2))
 
         self._timer = QTimer(self)
         self._timer.timeout.connect(self._redraw)

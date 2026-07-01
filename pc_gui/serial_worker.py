@@ -20,7 +20,8 @@ def available_ports() -> list[tuple[str, str]]:
 
 
 class SerialWorker(QThread):
-    phase_received = Signal(float)   # parsed "F,<deg>" value
+    # parsed "F,<deg>,<amp_v>,<freq_hz>" stream sample
+    sample_received = Signal(float, float, float)
     line_received = Signal(str)      # any other line (OK / NG / VER / ...)
     error = Signal(str)
     connected = Signal(bool)
@@ -78,10 +79,14 @@ class SerialWorker(QThread):
         if not line:
             return
         if line.startswith("F,"):
+            parts = line.split(",")
             try:
-                self.phase_received.emit(float(line[2:]))
+                deg = float(parts[1])
+                amp = float(parts[2]) if len(parts) > 2 else float("nan")
+                freq = float(parts[3]) if len(parts) > 3 else float("nan")
+                self.sample_received.emit(deg, amp, freq)
                 return
-            except ValueError:
+            except (ValueError, IndexError):
                 pass
         self.line_received.emit(line)
 
