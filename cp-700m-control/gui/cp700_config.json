@@ -1,0 +1,38 @@
+{
+  "1": {
+    "lead_mm": 2.0,
+    "divide": 20.0,
+    "start_speed_mm_s": 2.0,
+    "jog_speed_mm_s": 2.0,
+    "move_speed_mm_s": 5.0,
+    "max_speed_mm_s": 20.0,
+    "accel_ms": 100,
+    "soft_limit_cw_mm": 0.0,
+    "soft_limit_ccw_mm": 0.0,
+    "invert": false
+  },
+  "2": {
+    "lead_mm": 2.0,
+    "divide": 20.0,
+    "start_speed_mm_s": 2.0,
+    "jog_speed_mm_s": 2.0,
+    "move_speed_mm_s": 5.0,
+    "max_speed_mm_s": 20.0,
+    "accel_ms": 100,
+    "soft_limit_cw_mm": 0.0,
+    "soft_limit_ccw_mm": 0.0,
+    "invert": false
+  },
+  "3": {
+    "lead_mm": 2.0,
+    "divide": 20.0,
+    "start_speed_mm_s": 2.0,
+    "jog_speed_mm_s": 2.0,
+    "move_speed_mm_s": 5.0,
+    "max_speed_mm_s": 20.0,
+    "accel_ms": 100,
+    "soft_limit_cw_mm": 0.0,
+    "soft_limit_ccw_mm": 0.0,
+    "invert": false
+  }
+}
