@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QWidget" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1160</width>
+    <height>640</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>CP-700M コントローラ</string>
+  </property>
+  <layout class="QVBoxLayout" name="rootLayout">
+   <item>
+    <widget class="QGroupBox" name="connGroup">
+     <property name="title">
+      <string>通信</string>
+     </property>
+     <layout class="QGridLayout" name="connLayout">
+      <item row="0" column="0">
+       <widget class="QLabel" name="portLabel">
+        <property name="text">
+         <string>ポート</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="1">
+       <widget class="QComboBox" name="portCombo"/>
+      </item>
+      <item row="0" column="2">
+       <widget class="QCheckBox" name="mockCheck">
+        <property name="text">
+         <string>シミュレーション</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="3">
+       <widget class="QPushButton" name="refreshButton">
+        <property name="text">
+         <string>更新</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="4">
+       <widget class="QPushButton" name="connectButton">
+        <property name="text">
+         <string>接続</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="5">
+       <widget class="QPushButton" name="disconnectButton">
+        <property name="text">
+         <string>切断</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="6">
+       <widget class="QPushButton" name="testButton">
+        <property name="text">
+         <string>接続テスト</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="7">
+       <widget class="QPushButton" name="settingsButton">
+        <property name="text">
+         <string>設定…</string>
+        </property>
+       </widget>
+      </item>
+      <item row="0" column="8">
+       <widget class="QPushButton" name="triggerButton">
+        <property name="text">
+         <string>トリガ出力…</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="statusGroup">
+     <property name="title">
+      <string>状態</string>
+     </property>
+     <layout class="QHBoxLayout" name="statusLayout">
+      <item>
+       <widget class="QLabel" name="stateLabel">
+        <property name="text">
+         <string>未接続</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="interlockLabel">
+        <property name="text">
+         <string>インターロック: -</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QLabel" name="limitLabel">
+        <property name="text">
+         <string>リミット: -</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <spacer name="statusSpacer">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
+       <widget class="QPushButton" name="stopAllButton">
+        <property name="text">
+         <string>全軸即停止</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="stageGroup">
+     <property name="title">
+      <string>ステージ操作</string>
+     </property>
+     <layout class="QVBoxLayout" name="stageOuter">
+      <item>
+       <layout class="QHBoxLayout" name="jogSpeedLayout">
+        <item>
+         <widget class="QLabel" name="jogSpeedLabel">
+          <property name="text">
+           <string>ジョグ速度（全軸共通）</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="jogSpeedSpin"/>
+        </item>
+        <item>
+         <spacer name="jogSpeedSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <widget class="QWidget" name="stageContainer" native="true"/>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="fileGroup">
+     <property name="title">
+      <string>3軸同時移動（目標位置ライブラリ）</string>
+     </property>
+     <layout class="QVBoxLayout" name="fileLayout">
+      <item>
+       <layout class="QHBoxLayout" name="fileTopRow">
+        <item>
+         <widget class="QLabel" name="targetSelLabel">
+          <property name="text">
+           <string>目標（番号：名前）</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="targetCombo">
+          <property name="editable">
+           <bool>true</bool>
+          </property>
+          <property name="insertPolicy">
+           <enum>QComboBox::NoInsert</enum>
+          </property>
+          <property name="minimumWidth">
+           <number>220</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="targetModeLabel">
+          <property name="text">
+           <string>モード</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="targetModeCombo"/>
+        </item>
+        <item>
+         <spacer name="fileTopSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QLabel" name="filePathLabel">
+          <property name="text">
+           <string>（未読込）</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+      <item>
+       <layout class="QHBoxLayout" name="fileBottomRow">
+        <item>
+         <widget class="QLabel" name="fileAx1Label">
+          <property name="text">
+           <string>軸1</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="fileTarget1Spin"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="fileAx2Label">
+          <property name="text">
+           <string>軸2</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="fileTarget2Spin"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="fileAx3Label">
+          <property name="text">
+           <string>軸3</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="fileTarget3Spin"/>
+        </item>
+        <item>
+         <spacer name="fileSpacer">
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+          <property name="sizeHint" stdset="0">
+           <size>
+            <width>40</width>
+            <height>20</height>
+           </size>
+          </property>
+         </spacer>
+        </item>
+        <item>
+         <widget class="QPushButton" name="fileCopyButton">
+          <property name="text">
+           <string>現在位置をコピー</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="fileSaveButton">
+          <property name="text">
+           <string>保存（上書き）</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="fileMoveButton">
+          <property name="text">
+           <string>3軸絶対移動</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="commandGroup">
+     <property name="title">
+      <string>直接コマンド</string>
+     </property>
+     <layout class="QVBoxLayout" name="commandLayout">
+      <item>
+       <widget class="QPlainTextEdit" name="commandEdit">
+        <property name="maximumSize">
+         <size>
+          <width>16777215</width>
+          <height>68</height>
+         </size>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="sendButton">
+        <property name="text">
+         <string>送信</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+   <item>
+    <widget class="QGroupBox" name="logGroup">
+     <property name="title">
+      <string>ログ</string>
+     </property>
+     <layout class="QVBoxLayout" name="logLayout">
+      <item>
+       <widget class="QPlainTextEdit" name="logEdit">
+        <property name="readOnly">
+         <bool>true</bool>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
