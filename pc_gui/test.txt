@@ -1,8 +1,0 @@
-SWEEP att 0 10 5
-  ATTT${att}
-  SWEEP tgt 90000 110000 10000
-    R3S${tgt}
-    LABEL a${att}_f${tgt}
-    RUNN 200
-  ENDSWEEP
-ENDSWEEP
