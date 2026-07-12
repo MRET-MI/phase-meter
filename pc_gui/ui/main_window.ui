@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QWidget" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1300</width>
+    <height>780</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Phase Meter — 2ch phase difference</string>
+  </property>
+  <layout class="QHBoxLayout" name="rootLayout">
+   <item>
+    <layout class="QVBoxLayout" name="leftLayout">
+     <item>
+      <layout class="QHBoxLayout" name="connLayout">
+       <item>
+        <widget class="QLabel" name="portLabel">
+         <property name="text">
+          <string>Port:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QComboBox" name="portCombo">
+         <property name="minimumWidth">
+          <number>240</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="refreshButton">
+         <property name="text">
+          <string>Refresh</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="connectButton">
+         <property name="text">
+          <string>Connect</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="stageGroup">
+       <property name="title">
+        <string>Stage (CP-700M)</string>
+       </property>
+       <layout class="QHBoxLayout" name="stageConnLayout">
+        <item>
+         <widget class="QLabel" name="stagePortLabel">
+          <property name="text">
+           <string>Port:</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QComboBox" name="stagePortCombo">
+          <property name="minimumWidth">
+           <number>200</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="stageRefreshButton">
+          <property name="text">
+           <string>Refresh</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="stageConnectButton">
+          <property name="text">
+           <string>Connect</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="openStageGuiButton">
+          <property name="text">
+           <string>Open control GUI…</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="stageStatusLabel">
+          <property name="text">
+           <string>(stage not connected)</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #555;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="ctrlLayout">
+       <item>
+        <widget class="QPushButton" name="runButton">
+         <property name="text">
+          <string>RUN</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="stopButton">
+         <property name="text">
+          <string>STOP</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="verButton">
+         <property name="text">
+          <string>VER</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="settingsButton">
+         <property name="text">
+          <string>Settings…</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="ctrlSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="acqGroup">
+       <property name="title">
+        <string>Acquisition</string>
+       </property>
+       <layout class="QHBoxLayout" name="acqLayout">
+        <item>
+         <widget class="QComboBox" name="modeCombo"/>
+        </item>
+        <item>
+         <widget class="QLabel" name="durationLabel">
+          <property name="text">
+           <string>duration</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QDoubleSpinBox" name="durationSpin">
+          <property name="suffix">
+           <string> s</string>
+          </property>
+          <property name="decimals">
+           <number>1</number>
+          </property>
+          <property name="minimum">
+           <double>0.100000000000000</double>
+          </property>
+          <property name="maximum">
+           <double>3600.000000000000000</double>
+          </property>
+          <property name="singleStep">
+           <double>1.000000000000000</double>
+          </property>
+          <property name="value">
+           <double>10.000000000000000</double>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="countLabel">
+          <property name="text">
+           <string>count</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="countSpin">
+          <property name="suffix">
+           <string> pts</string>
+          </property>
+          <property name="minimum">
+           <number>1</number>
+          </property>
+          <property name="maximum">
+           <number>10000000</number>
+          </property>
+          <property name="singleStep">
+           <number>100</number>
+          </property>
+          <property name="value">
+           <number>1000</number>
+          </property>
+          <property name="groupSeparatorShown">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="attenDacRow">
+       <item>
+        <widget class="QGroupBox" name="attenGroup">
+         <property name="title">
+          <string>Attenuator [dB]</string>
+         </property>
+         <layout class="QHBoxLayout" name="attenLayout">
+          <item>
+           <widget class="QLabel" name="txLabel">
+            <property name="text">
+             <string>TX</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="txSpin">
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <double>31.500000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="txSetButton">
+            <property name="text">
+             <string>Set TX</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QLabel" name="rxLabel">
+            <property name="text">
+             <string>RX</string>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QDoubleSpinBox" name="rxSpin">
+            <property name="decimals">
+             <number>1</number>
+            </property>
+            <property name="maximum">
+             <double>31.500000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.500000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="rxSetButton">
+            <property name="text">
+             <string>Set RX</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QGroupBox" name="dacGroup">
+         <property name="title">
+          <string>DAC PA5 [V]</string>
+         </property>
+         <layout class="QHBoxLayout" name="dacLayout">
+          <item>
+           <widget class="QDoubleSpinBox" name="dacSpin">
+            <property name="decimals">
+             <number>3</number>
+            </property>
+            <property name="maximum">
+             <double>3.300000000000000</double>
+            </property>
+            <property name="singleStep">
+             <double>0.010000000000000</double>
+            </property>
+            <property name="value">
+             <double>3.300000000000000</double>
+            </property>
+           </widget>
+          </item>
+          <item>
+           <widget class="QPushButton" name="dacSetButton">
+            <property name="text">
+             <string>Set DAC</string>
+            </property>
+           </widget>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="potGroup">
+       <property name="title">
+        <string>Pot MCP41HV51 [0-256]</string>
+       </property>
+       <layout class="QHBoxLayout" name="potLayout">
+        <item>
+         <widget class="QLabel" name="potTxLabel">
+          <property name="text">
+           <string>TX</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="potTxSpin">
+          <property name="maximum">
+           <number>256</number>
+          </property>
+          <property name="value">
+           <number>128</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="potTxSetButton">
+          <property name="text">
+           <string>Set TX</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="potRxLabel">
+          <property name="text">
+           <string>RX</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QSpinBox" name="potRxSpin">
+          <property name="maximum">
+           <number>256</number>
+          </property>
+          <property name="value">
+           <number>128</number>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="potRxSetButton">
+          <property name="text">
+           <string>Set RX</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="valueFreqLayout">
+       <item>
+        <widget class="QLabel" name="valueLabel">
+         <property name="styleSheet">
+          <string notr="true">font-size: 16px; font-weight: 600;</string>
+         </property>
+         <property name="text">
+          <string>phase: —</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLabel" name="freqLabel">
+         <property name="styleSheet">
+          <string notr="true">font-size: 16px; color: #555;</string>
+         </property>
+         <property name="text">
+          <string>peak freq: —    amp: —</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <spacer name="valueFreqSpacer">
+         <property name="orientation">
+          <enum>Qt::Horizontal</enum>
+         </property>
+         <property name="sizeHint" stdset="0">
+          <size>
+           <width>40</width>
+           <height>20</height>
+          </size>
+         </property>
+        </spacer>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="cmdLayout">
+       <item>
+        <widget class="QLabel" name="cmdLabel">
+         <property name="text">
+          <string>Cmd:</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="cmdEdit">
+         <property name="placeholderText">
+          <string>send command (e.g. DBG, R1R) — Enter to send</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="sendButton">
+         <property name="text">
+          <string>Send</string>
+         </property>
+        </widget>
+       </item>
+      </layout>
+     </item>
+     <item>
+      <widget class="QGroupBox" name="autoGroup">
+       <property name="title">
+        <string>Auto measure (script)</string>
+       </property>
+       <layout class="QHBoxLayout" name="autoLayout">
+        <item>
+         <widget class="QPushButton" name="loadScriptButton">
+          <property name="text">
+           <string>Load script…</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="runScriptButton">
+          <property name="text">
+           <string>Run</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="stopScriptButton">
+          <property name="text">
+           <string>Stop</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QLabel" name="scriptLabel">
+          <property name="text">
+           <string>(no script)</string>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">color: #555;</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+     </item>
+     <item>
+      <layout class="QHBoxLayout" name="bottomLayout">
+       <item>
+        <widget class="QPlainTextEdit" name="logEdit">
+         <property name="maximumBlockCount">
+          <number>500</number>
+         </property>
+         <property name="readOnly">
+          <bool>true</bool>
+         </property>
+         <property name="minimumHeight">
+          <number>120</number>
+         </property>
+         <property name="maximumWidth">
+          <number>420</number>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <layout class="QVBoxLayout" name="bottomButtons">
+         <item>
+          <widget class="QPushButton" name="saveDataButton">
+           <property name="text">
+            <string>Save all data…</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="csvButton">
+           <property name="text">
+            <string>Start CSV log…</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <widget class="QPushButton" name="clearButton">
+           <property name="text">
+            <string>Clear data</string>
+           </property>
+          </widget>
+         </item>
+         <item>
+          <spacer name="bottomButtonsSpacer">
+           <property name="orientation">
+            <enum>Qt::Vertical</enum>
+           </property>
+           <property name="sizeHint" stdset="0">
+            <size>
+             <width>20</width>
+             <height>10</height>
+            </size>
+           </property>
+          </spacer>
+         </item>
+        </layout>
+       </item>
+      </layout>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <layout class="QVBoxLayout" name="rightLayout">
+     <item>
+      <widget class="RollingPlot" name="phasePlot">
+       <property name="minimumWidth">
+        <number>420</number>
+       </property>
+       <property name="minimumHeight">
+        <number>180</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="RollingPlot" name="ampPlot">
+       <property name="minimumWidth">
+        <number>420</number>
+       </property>
+       <property name="minimumHeight">
+        <number>180</number>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="RollingPlot" name="tempPlot">
+       <property name="minimumWidth">
+        <number>420</number>
+       </property>
+       <property name="minimumHeight">
+        <number>180</number>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>RollingPlot</class>
+   <extends>QWidget</extends>
+   <header>plot_widget</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
