@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>WaveformDialog</class>
+ <widget class="QDialog" name="WaveformDialog">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>820</width>
+    <height>520</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Raw waveform — 2ch</string>
+  </property>
+  <layout class="QVBoxLayout" name="waveRootLayout">
+   <item>
+    <layout class="QHBoxLayout" name="waveCtrlLayout">
+     <item>
+      <widget class="QPushButton" name="captureButton">
+       <property name="text">
+        <string>Capture</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="liveCheck">
+       <property name="text">
+        <string>Live</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QDoubleSpinBox" name="liveRateSpin">
+       <property name="suffix">
+        <string> Hz</string>
+       </property>
+       <property name="decimals">
+        <number>1</number>
+       </property>
+       <property name="minimum">
+        <double>0.500000000000000</double>
+       </property>
+       <property name="maximum">
+        <double>20.000000000000000</double>
+       </property>
+       <property name="singleStep">
+        <double>1.000000000000000</double>
+       </property>
+       <property name="value">
+        <double>3.000000000000000</double>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="unitLabel">
+       <property name="text">
+        <string>Unit:</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QComboBox" name="unitCombo"/>
+     </item>
+     <item>
+      <spacer name="waveCtrlSpacer">
+       <property name="orientation">
+        <enum>Qt::Horizontal</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>40</width>
+         <height>20</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
+     <item>
+      <widget class="QPushButton" name="saveWaveButton">
+       <property name="text">
+        <string>Save…</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QLabel" name="waveInfoLabel">
+       <property name="text">
+        <string>(no capture)</string>
+       </property>
+       <property name="styleSheet">
+        <string notr="true">color: #555;</string>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </item>
+   <item>
+    <widget class="WaveformPlot" name="wavePlot">
+     <property name="minimumHeight">
+      <number>380</number>
+     </property>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <customwidgets>
+  <customwidget>
+   <class>WaveformPlot</class>
+   <extends>QWidget</extends>
+   <header>plot_widget</header>
+  </customwidget>
+ </customwidgets>
+ <resources/>
+ <connections/>
+</ui>
